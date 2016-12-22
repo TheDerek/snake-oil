@@ -1,4 +1,5 @@
-led / optimized / DLL files
+assets/cards/
+
 __pycache__/
 *.py[cod]
 *$py.class
