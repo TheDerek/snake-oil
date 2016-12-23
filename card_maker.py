@@ -1,17 +1,48 @@
 import xml.etree.ElementTree as ET
+import copy
 from functools import reduce
 
 
-def create_word_svg(word, svg_template):
+def create_page_svg(page, svg_template, page_number=0):
     # Load the svg file
     root = ET.parse(svg_template).getroot()
+    layer = root.find('.//*[@id="layer1"]')
 
-    # Find the text we need to replace
-    word_element = root.find('.//*[@id="wordText"]')
-    word_element.text = word.capitalize()
+    # Find and copy the card element
+    original_card = root.find('.//*[@id="card"]')
+
+    # Create a 4x4 grid of cards
+    for y in range(0, 4):
+        for x in range(0, 4):
+            # Create the card in the correct position
+            page_x = x * 74.25
+            page_y = y * 52.5
+            word_index = (y * 4) + x
+            print(word_index)
+
+            # If there is no word here then skip the card
+            if word_index > len(page) - 1:
+                continue
+
+            card = copy.deepcopy(original_card)
+            card.attrib['id'] = 'card' + str(x) + 'x' + str(y)
+            card.attrib['transform'] = 'translate(' + str(page_x) \
+                                       + ', ' + str(page_y) + ')'
+            card.find('.//*[@id="cardImage"]').attrib['xlink:href'] \
+                = '../snake_letter.svg'
+
+            # Change the text of the card
+            text_element = card.find('.//*[@id="wordText"]')
+            text_element.text = page[word_index].capitalize()
+
+            # Add the card to the page
+            layer.append(card)
+
+    # Remove the original card
+    layer.remove(original_card)
 
     # Save the file
-    path = 'assets/cards/' + word + '.svg'
+    path = 'assets/cards/' + str(page_number) + '.svg'
     tree = ET.ElementTree(root)
     tree.write(path)
     return root
@@ -51,7 +82,11 @@ if __name__ == "__main__":
     # Split the word into pages
     pages = page_items(words, 16)
 
-    # Create an SVG for each card with a customised word
-    for word in words:
-        svg = create_word_svg(word, 'assets/template_test.svg')
+    print(pages[-1])
+
+    # Create an SVG for each page
+    for index, page in enumerate(pages):
+        # Fetch the card SVG
+        svg = create_page_svg(page, 'assets/template_test.svg', index)
+
         pass

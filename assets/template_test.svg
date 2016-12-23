@@ -52,7 +52,7 @@
         inkscape:label="Layer 1"
         inkscape:groupmode="layer"
         id="layer1">
-        <g id="group" transform="translate(0, 0)">
+        <g id="card" transform="translate(0, 0)">
             <rect
                 height="52.5"
                 width="74.25"
@@ -63,6 +63,7 @@
                     y="30"
                     width="15"
                     height="15"
+                    id="cardImage"
                     xlink:href="snake_letter.svg" />
             <text
                  sodipodi:linespacing="125%"
