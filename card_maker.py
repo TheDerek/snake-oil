@@ -28,8 +28,6 @@ def create_page_svg(page, svg_template, page_number=0):
             card.attrib['id'] = 'card' + str(x) + 'x' + str(y)
             card.attrib['transform'] = 'translate(' + str(page_x) \
                                        + ', ' + str(page_y) + ')'
-            card.find('.//*[@id="cardImage"]').attrib['xlink:href'] \
-                = '../snake_letter.svg'
 
             # Change the text of the card
             text_element = card.find('.//*[@id="wordText"]')
