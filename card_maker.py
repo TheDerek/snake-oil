@@ -3,7 +3,7 @@ import copy
 from functools import reduce
 
 
-def create_page_svg(page, svg_template, page_number=0):
+def create_page_svg(page, svg_template, page_number=0, createPDF=False):
     # Load the svg file
     root = ET.parse(svg_template).getroot()
     layer = root.find('.//*[@id="layer1"]')
@@ -43,6 +43,13 @@ def create_page_svg(page, svg_template, page_number=0):
     path = 'assets/cards/' + str(page_number) + '.svg'
     tree = ET.ElementTree(root)
     tree.write(path)
+    
+    if createPDF is True:
+        import cairosvg
+        import os
+        pathPDF = os.path.dirname(path) + '/' + str(page_number) + '.pdf'
+        cairosvg.svg2pdf(url=path, write_to=pathPDF)
+    
     return root
 
 
@@ -85,6 +92,6 @@ if __name__ == "__main__":
     # Create an SVG for each page
     for index, page in enumerate(pages):
         # Fetch the card SVG
-        svg = create_page_svg(page, 'assets/template_test.svg', index)
+        svg = create_page_svg(page, 'assets/template_test.svg', index, createPDF=True)
 
         pass
